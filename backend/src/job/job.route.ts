@@ -5,6 +5,7 @@ import constants from "../constant";
 import {
   PublishJob,
   GetAllJobs,
+  GetJobById,
   UpdateJob,
   DeleteJob,
   ApplyForJob,
@@ -30,6 +31,15 @@ JobRouter.get(
     constants.USER.ROLES.USER,
   ]),
   GetAllJobs
+);
+
+JobRouter.get(
+  "/getJobById/:jobId",
+  authMiddleware.authorize([
+    constants.USER.ROLES.ADMIN,
+    constants.USER.ROLES.USER,
+  ]),
+  GetJobById
 );
 
 JobRouter.patch(

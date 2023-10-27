@@ -19,12 +19,12 @@ const PublishJob = async (req: Request, res: Response) => {
   //check if the organization exists
   const user: any = await userService.findById(auth._id);
 
-  if (!user.organization) throw new NotFoundError("Organization not found!");
+  //if (!user.organization) throw new NotFoundError("Organization not found!");
 
   const newJob = new Job(body);
 
   //construct the job object
-  newJob.organization = user.organization._id;
+  //newJob.organization = user.organization._id;
   newJob.addedBy = auth._id;
 
   const session = await startSession();
@@ -61,6 +61,23 @@ const GetAllJobs = async (req: Request, res: Response) => {
   } else {
     jobs = await jobService.findAllJobs();
   }
+
+  CustomResponse(res, true, StatusCodes.OK, "Jobs fetched successfully", jobs);
+};
+
+const GetJobById = async (req: Request, res: Response) => {
+  const auth: any = req.auth;
+  const jobId = req.params.jobId;
+
+  let jobs: any = null;
+
+  if (auth.role === constants.USER.ROLES.ADMIN) {
+    jobs = await jobService.findById(jobId);
+  } else {
+    jobs = await jobService.findAllJobs();
+  }
+
+  if (!jobs) throw new NotFoundError("Job not found!");
 
   CustomResponse(res, true, StatusCodes.OK, "Jobs fetched successfully", jobs);
 };
@@ -262,4 +279,5 @@ export {
   RemoveSavedJob,
   GetAllAppliedJobs,
   GetAllSavedJobs,
+  GetJobById,
 };
