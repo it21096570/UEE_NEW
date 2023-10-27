@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetAllSavedJobs = exports.GetAllAppliedJobs = exports.RemoveSavedJob = exports.SaveJob = exports.ApplyForJob = exports.DeleteJob = exports.UpdateJob = exports.GetAllJobs = exports.PublishJob = void 0;
+exports.GetJobById = exports.GetAllSavedJobs = exports.GetAllAppliedJobs = exports.RemoveSavedJob = exports.SaveJob = exports.ApplyForJob = exports.DeleteJob = exports.UpdateJob = exports.GetAllJobs = exports.PublishJob = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const mongoose_1 = require("mongoose");
 const emailServer_1 = require("../util/emailServer");
@@ -28,11 +28,10 @@ const PublishJob = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const body = req.body;
     //check if the organization exists
     const user = yield user_service_1.default.findById(auth._id);
-    if (!user.organization)
-        throw new NotFoundError_1.default("Organization not found!");
+    //if (!user.organization) throw new NotFoundError("Organization not found!");
     const newJob = new job_model_1.default(body);
     //construct the job object
-    newJob.organization = user.organization._id;
+    //newJob.organization = user.organization._id;
     newJob.addedBy = auth._id;
     const session = yield (0, mongoose_1.startSession)();
     let createdJob = null;
@@ -63,6 +62,21 @@ const GetAllJobs = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     (0, response_1.default)(res, true, http_status_codes_1.StatusCodes.OK, "Jobs fetched successfully", jobs);
 });
 exports.GetAllJobs = GetAllJobs;
+const GetJobById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const auth = req.auth;
+    const jobId = req.params.jobId;
+    let jobs = null;
+    if (auth.role === constant_1.default.USER.ROLES.ADMIN) {
+        jobs = yield job_service_1.default.findById(jobId);
+    }
+    else {
+        jobs = yield job_service_1.default.findAllJobs();
+    }
+    if (!jobs)
+        throw new NotFoundError_1.default("Job not found!");
+    (0, response_1.default)(res, true, http_status_codes_1.StatusCodes.OK, "Jobs fetched successfully", jobs);
+});
+exports.GetJobById = GetJobById;
 const UpdateJob = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const jobId = req.params.jobId;
     const auth = req.auth;

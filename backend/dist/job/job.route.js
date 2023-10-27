@@ -14,6 +14,10 @@ JobRouter.get("/allJobs", auth_middleware_1.default.authorize([
     constant_1.default.USER.ROLES.ADMIN,
     constant_1.default.USER.ROLES.USER,
 ]), job_controller_1.GetAllJobs);
+JobRouter.get("/getJobById/:jobId", auth_middleware_1.default.authorize([
+    constant_1.default.USER.ROLES.ADMIN,
+    constant_1.default.USER.ROLES.USER,
+]), job_controller_1.GetJobById);
 JobRouter.patch("/update/:jobId", auth_middleware_1.default.authorize([constant_1.default.USER.ROLES.ADMIN]), job_controller_1.UpdateJob);
 JobRouter.put("/delete/:jobId", auth_middleware_1.default.authorize([constant_1.default.USER.ROLES.ADMIN]), job_controller_1.DeleteJob);
 JobRouter.post("/apply/:jobId", auth_middleware_1.default.authorize([constant_1.default.USER.ROLES.USER]), common_middleware_1.default.multerUploader.single("resume"), job_controller_1.ApplyForJob);

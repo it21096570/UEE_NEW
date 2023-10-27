@@ -27,7 +27,7 @@ const Login = () => {
 
   const handleLoginPress = async () => {
     try {
-      const response = await axios.post('https://uee123.onrender.com/api/v1/auth/login', {
+      const response = await axios.post('http://192.168.8.100:8090/api/v1/auth/login', {
         email,
         password,
       });

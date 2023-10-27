@@ -27,8 +27,9 @@ const AdminHomePage = () => {
     };
 
     const handleJobSView = () => {
-        //navigation.navigate('Appointments')
+        navigation.navigate('JobAdminDashboard')
     };
+
     const handleNewsView = () => {
         navigation.navigate('NewsAdminHome')
     };
